@@ -44,14 +44,24 @@ ZoneIQ/
 │   │   ├── BaseRepository.js
 │   │   ├── PortfolioRepository.js
 │   │   ├── BuildingRepository.js
+│   │   ├── FloorRepository.js
+│   │   ├── ZoneRepository.js
 │   │   ├── DeviceRepository.js
-│   │   └── PointRepository.js
+│   │   ├── PointRepository.js
+│   │   ├── DeviceProfileRepository.js
+│   │   └── index.js
 │   ├── controllers/     # API route handlers
 │   ├── dto/             # Request/response validation schemas
 │   │   ├── PortfolioDTO.js
+│   │   ├── BuildingDTO.js
+│   │   ├── FloorDTO.js
+│   │   ├── ZoneDTO.js
 │   │   ├── DeviceDTO.js
-│   │   └── PointDTO.js
+│   │   ├── PointDTO.js
+│   │   └── index.js
 │   └── models/          # Domain models/entities
+├── scripts/             # Utility scripts
+│   └── migrate.js       # Database migration runner
 ├── tests/               # Test suites (unit, integration, e2e)
 ├── docs/                # User stories and requirements
 ├── spec.md              # Technical specification
@@ -103,7 +113,11 @@ ZoneIQ/
 
 4. **Run database migrations**
    ```bash
-   # Using psql
+   # Using migration script (recommended)
+   npm run migrate:status   # Check migration status
+   npm run migrate:up       # Run all pending migrations
+   
+   # Or using psql directly
    psql -U your_user -d zoneiq_db -f migrations/20260903_1200_create_portfolio_hierarchy_tables.sql
    psql -U your_user -d zoneiq_db -f migrations/20260903_1210_create_device_tables.sql
    psql -U your_user -d zoneiq_db -f migrations/20260903_1220_create_point_catalogue_tables.sql

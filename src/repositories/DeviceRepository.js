@@ -260,6 +260,32 @@ class DeviceRepository extends BaseRepository {
         const result = await this.db.query(query, [zoneId]);
         return result.rows;
     }
+
+    /**
+     * Check if device has points (for delete integrity check)
+     * @param {number} deviceId - Device ID
+     * @returns {Promise<boolean>}
+     */
+    async hasPoints(deviceId) {
+        const query = `
+            SELECT EXISTS(
+                SELECT 1 FROM points WHERE device_id = $1
+            )
+        `;
+        const result = await this.db.query(query, [deviceId]);
+        return result.rows[0].exists;
+    }
+
+    /**
+     * Count points for device
+     * @param {number} deviceId - Device ID
+     * @returns {Promise<number>}
+     */
+    async countPoints(deviceId) {
+        const query = 'SELECT COUNT(*) as total FROM points WHERE device_id = $1';
+        const result = await this.db.query(query, [deviceId]);
+        return parseInt(result.rows[0].total, 10);
+    }
 }
 
 module.exports = DeviceRepository;

@@ -122,6 +122,32 @@ class BuildingRepository extends BaseRepository {
         const result = await this.db.query(query, [buildingId, portfolioId]);
         return result.rows[0].exists;
     }
+
+    /**
+     * Check if building has floors (for delete integrity check)
+     * @param {number} buildingId - Building ID
+     * @returns {Promise<boolean>}
+     */
+    async hasFloors(buildingId) {
+        const query = `
+            SELECT EXISTS(
+                SELECT 1 FROM floors WHERE building_id = $1
+            )
+        `;
+        const result = await this.db.query(query, [buildingId]);
+        return result.rows[0].exists;
+    }
+
+    /**
+     * Count floors in building
+     * @param {number} buildingId - Building ID
+     * @returns {Promise<number>}
+     */
+    async countFloors(buildingId) {
+        const query = 'SELECT COUNT(*) as total FROM floors WHERE building_id = $1';
+        const result = await this.db.query(query, [buildingId]);
+        return parseInt(result.rows[0].total, 10);
+    }
 }
 
 module.exports = BuildingRepository;

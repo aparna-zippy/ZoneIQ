@@ -152,6 +152,32 @@ class PortfolioRepository extends BaseRepository {
         const result = await this.db.query(query, [portfolioId]);
         return result.rows.length > 0 ? result.rows[0] : null;
     }
+
+    /**
+     * Check if portfolio has buildings (for delete integrity check)
+     * @param {number} portfolioId - Portfolio ID
+     * @returns {Promise<boolean>}
+     */
+    async hasBuildings(portfolioId) {
+        const query = `
+            SELECT EXISTS(
+                SELECT 1 FROM buildings WHERE portfolio_id = $1
+            )
+        `;
+        const result = await this.db.query(query, [portfolioId]);
+        return result.rows[0].exists;
+    }
+
+    /**
+     * Count buildings in portfolio
+     * @param {number} portfolioId - Portfolio ID
+     * @returns {Promise<number>}
+     */
+    async countBuildings(portfolioId) {
+        const query = 'SELECT COUNT(*) as total FROM buildings WHERE portfolio_id = $1';
+        const result = await this.db.query(query, [portfolioId]);
+        return parseInt(result.rows[0].total, 10);
+    }
 }
 
 module.exports = PortfolioRepository;
